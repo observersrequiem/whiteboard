@@ -4,7 +4,7 @@ using System.IO;
 using Unity.VisualScripting;
 using NUnit.Framework.Internal;
 using Unity.Mathematics;
-
+// Locking in.
 public class DialogueSystem : MonoBehaviour
 {
      [SerializeField]
@@ -22,26 +22,33 @@ public class DialogueSystem : MonoBehaviour
 
     public void PushDialogueBasic() 
     {
+        // if the bug isnt fixed add a check here :p
         anim.SetInteger("AnimID",animkeys[dialogues[currentIndex].AnimKey]);
         tdb.StartTyping(dialogues[currentIndex].TextKey);tdb.SetName(dialogues[currentIndex].NameKey);
     }
 
-    public void BeginSequence(List<Dialogue> chatter) {
+    public void PushDialogue(Dialogue d)
+    {
+        
+    }
+
+    public void BasicSequence(List<Dialogue> chatter) {
         dialogues.Clear();
         currentIndex = 0;
         dialogues = chatter;
         PushDialogueBasic();
+    } // No translation, no buttons, straight PUSH
+
+    public void ComplexSequence(List<Dialogue> chatter) {
+        dialogues.Clear();
+        currentIndex = 0;
     }
 
     void EndSequence() {
-        // clears all lists
-        // clears the dialoguebox
-        // clears anim final
         dialogues.Clear();
         tdb.StartTyping("");
         tdb.SetName("");
-        anim.SetInteger("AnimID", 0);
-        //add anything necessary at the bottom of the list
+        anim.SetInteger("AnimID", 0); // add the UI disabling here (lol)
     }
 
     public void NextFrame()

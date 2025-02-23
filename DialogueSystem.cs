@@ -16,6 +16,7 @@ public class DialogueSystem : MonoBehaviour
 
     public TextDeployerBasic tdb;
     public Animator anim;
+    public VarMan varman;
     public List<Dialogue> dialogues = new();
 
     private int currentIndex;
@@ -29,8 +30,19 @@ public class DialogueSystem : MonoBehaviour
 
     public void PushDialogue(Dialogue d)
     {
+        anim.SetInteger("AnimID", animkeys[d.AnimKey]); //animation first of all
+        switch (d.Action.type)
+        {
+            case DialogueAction.DialogueActionType.None:
+                tdb.StartTyping(d.TextKey);tdb.SetName(d.NameKey);
+                break;
+            case DialogueAction.DialogueActionType.SetVar:
+                varman.SetVariable(d.Action.key,d.Action.value);
+                tdb.StartTyping(d.TextKey);tdb.SetName(d.NameKey);
+                break;
+        }
         
-    }
+    } //this one needs to dialogue the class it receives in order to be able to interact with varman properly and handle things.
 
     public void BasicSequence(List<Dialogue> chatter) {
         dialogues.Clear();
@@ -42,6 +54,8 @@ public class DialogueSystem : MonoBehaviour
     public void ComplexSequence(List<Dialogue> chatter) {
         dialogues.Clear();
         currentIndex = 0;
+        dialogues = chatter;
+        PushDialogue(dialogues[currentIndex]);
     }
 
     void EndSequence() {

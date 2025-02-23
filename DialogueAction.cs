@@ -8,17 +8,12 @@ public class DialogueAction
     public enum DialogueActionType
     {
         None,        
-        SetFlag,    
-        ChangeValue, 
+        SetVar,    
         ShowButtons  
     }
     [SerializeField]
     public DialogueActionType type;
-    public string FlagName;         // For SetFlag
-    public bool FlagValue;          
-    public string ValueName;        // For ChangeValue
-    public int ValueToAdd;
-    public string[] ButtonLabels;   // For ShowButtons,
-
-    
+    public string key;
+    public object value;
+    public string[] ButtonLabels;   // For ShowButtons, add stuff later
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class TextDeployerBasic : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class TextDeployerBasic : MonoBehaviour
     public bool isTyping;
     private Coroutine typingCoroutine;
     private string currentFullText;
+    [SerializeField]private AudioSource player;
+    [SerializeField]private AudioClip sfx1;
+    [SerializeField]private AudioClip sfx2;
+    [SerializeField]private AudioClip sfx3;
+    [SerializeField]private AudioClip skip;
+    
 
     public void Skip()
     {
@@ -26,6 +33,7 @@ public class TextDeployerBasic : MonoBehaviour
                 typingCoroutine = null;
                 isTyping = false;
                 indicator.enabled = true;
+                PlaySkipAudio();
             }
     }   
 
@@ -50,10 +58,26 @@ public class TextDeployerBasic : MonoBehaviour
 
         for (int i = 0; i < fullText.Length; i++) {
             textComponent.text += fullText[i];
+            PlayAudio();
             yield return new WaitForSeconds(delay);
         }
         typingCoroutine = null; // when finished naturally, it clears itself.
         isTyping = false; //for skipping
         indicator.enabled = true;
+    }
+
+    private void PlayAudio()
+    {
+        AudioClip[] pot = {sfx1,sfx2,sfx3};
+        int z = Random.Range(1,3);
+        AudioClip x = pot[z];
+        player.clip = x;
+        player.Play();
+    }
+
+    private void PlaySkipAudio()
+    {
+        player.clip = skip;
+        player.Play();
     }
 }

@@ -9,11 +9,17 @@ public class DialogueAction
     {
         None,        
         SetVar,    
-        ShowButtons  
+        DialogueBranch  
     }
     [SerializeField]
     public DialogueActionType type;
-    public string key;
-    public object value;
-    public string[] ButtonLabels;   // For ShowButtons, add stuff later
+    [SerializeField]
+    public List<VarChange> vc = new();
+
+    
+    [SerializeField]
+    public List<BranchDialogue> dbs = new();
+
+    public string sfxkey;
+
 }

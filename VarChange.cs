@@ -34,10 +34,10 @@ public class VarChange
         }
         set
         {
-            if (value is int) { type = TypeF.Int; intValue = (int)value; Debug.Log("Set int");}
-            else if (value is float) { type = TypeF.Float; floatValue = (float)value; Debug.Log("Set float");}
-            else if (value is bool) { type = TypeF.Bool; boolValue = (bool)value; Debug.Log("Set bool");}
-            else if (value is string) { type = TypeF.String; stringValue = (string)value; Debug.Log("Set string");}
+            if (value is int) { type = TypeF.Int; intValue = (int)value;}
+            else if (value is float) { type = TypeF.Float; floatValue = (float)value;}
+            else if (value is bool) { type = TypeF.Bool; boolValue = (bool)value;}
+            else if (value is string) { type = TypeF.String; stringValue = (string)value;}
             else throw new System.ArgumentException("Unsupported type");
         }
     }

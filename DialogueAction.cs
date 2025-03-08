@@ -21,5 +21,6 @@ public class DialogueAction
     public List<BranchDialogue> dbs = new();
 
     public string sfxkey;
+    public string bgmkey;
 
 }

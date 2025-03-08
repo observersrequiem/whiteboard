@@ -13,6 +13,7 @@ public class TextDeployerBasic : MonoBehaviour
     [SerializeField] private TMP_Text textComponent;
     [SerializeField] private float charactersPerSecond = 30;
     [SerializeField] private Image indicator;
+    [SerializeField] private Image nametagImage;
     [SerializeField] private TMP_Text nameText;
     public bool isTyping;
     private Coroutine typingCoroutine;
@@ -22,6 +23,7 @@ public class TextDeployerBasic : MonoBehaviour
     [SerializeField]private AudioClip sfx2;
     [SerializeField]private AudioClip sfx3;
     [SerializeField]private AudioClip skip;
+    public RectTransform nametagbox;
     
 
     public void Skip()
@@ -48,7 +50,16 @@ public class TextDeployerBasic : MonoBehaviour
         indicator.enabled = false;
     }
     public void SetName(string name){
-        nameText.text = name;
+        if (name == "empty")
+        {
+            nameText.text = "";
+            nametagImage.enabled = false;
+            Debug.Log("Nametag empty.");
+        } else {
+            nametagImage.enabled = true;
+            nameText.text = name;
+        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(nametagbox);
     }
     // Typewriter effect :D
     private IEnumerator TypeText(string fullText) {

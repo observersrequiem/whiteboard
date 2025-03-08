@@ -1,9 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
-using NUnit.Framework.Internal;
-using Unity.Mathematics;
+using System.Linq;
 // Locking in.
 public class DialogueSystem : MonoBehaviour
 {
@@ -11,16 +9,18 @@ public class DialogueSystem : MonoBehaviour
     Dictionary<string, int> animkeys = new Dictionary<string, int> (){
         { "none", 0 },
         { "defo", 1 },
-        { "tagged", 2 },
+        { "tagged", 2 }
     };
 
     public TextDeployerBasic tdb;
     public Animator anim;
     public VarMan varman;
     public SFXDiaManager sfx;
+    public DSButtonHandler dsbh;
     public List<Dialogue> dialogues = new();
-
-    private int currentIndex;
+    public bool CanNextFrame = true;
+    [SerializeField] Button move;
+    [SerializeField] private int currentIndex;
 
     public void PushDialogueBasic() 
     {
@@ -29,9 +29,11 @@ public class DialogueSystem : MonoBehaviour
         tdb.StartTyping(dialogues[currentIndex].TextKey);tdb.SetName(dialogues[currentIndex].NameKey);
     }
 
-    public void PushDialogue(Dialogue d)
+    public void PushDialogue(int curint)
     {
-        if (currentIndex < dialogues.Count) 
+        Debug.Log("We are at "+currentIndex+" and we have a total of "+dialogues.Count);
+        Dialogue d = dialogues.ElementAtOrDefault(curint);
+        if (d != null)
         {
             currentIndex++;
             anim.SetInteger("AnimID", animkeys[d.AnimKey]); //animation first of all
@@ -46,13 +48,18 @@ public class DialogueSystem : MonoBehaviour
                     break;
                 case DialogueAction.DialogueActionType.DialogueBranch:
                     tdb.StartTyping(d.TextKey);tdb.SetName(d.NameKey);
-                    //buttons buttons buttons lets handle the button system
+                    dsbh.PushButtons(d.Action.dbs);
+                    CanNextFrame = false;
                     break;
             }
             if (d.Action.sfxkey != "") 
-            {sfx.PlaySfx(d.Action.sfxkey); }
-
-        } else {EndSequence();}
+            {sfx.PlaySfx(d.Action.sfxkey);}
+            if (d.Action.bgmkey != "")
+            {sfx.PlayBGM(d.Action.bgmkey);}
+        } else
+        {
+            EndSequence();
+        }
     } 
 
     public void BasicSequence(List<Dialogue> chatter) {
@@ -66,7 +73,7 @@ public class DialogueSystem : MonoBehaviour
         dialogues.Clear();
         currentIndex = 0;
         dialogues = chatter;
-        PushDialogue(dialogues[currentIndex]);
+        PushDialogue(currentIndex);
     }
 
     void EndSequence() {
@@ -77,11 +84,20 @@ public class DialogueSystem : MonoBehaviour
         anim.SetInteger("AnimID", 0); // add the UI disabling here (lol)
     }
 
-    public void NextFrame()
+    public void NextFrame() // U have to couple this with some inputmanager thingy
     {
-        if (!tdb.isTyping){
-            PushDialogue(dialogues[currentIndex]);
-        } else {tdb.Skip();}
+        if (CanNextFrame)
+        {
+            if (!tdb.isTyping){
+            PushDialogue(currentIndex);
+            } else {tdb.Skip();}
+        } else {Debug.Log("Dumbass");}
+    }
+
+    public void ButtonRecall(List<Dialogue> d) 
+    {
+        CanNextFrame = true;
+        ComplexSequence(d);
     }
 
 }

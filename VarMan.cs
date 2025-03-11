@@ -10,7 +10,8 @@ public class VarMan : MonoBehaviour
         {"defaultbool", false},
         {"defaultval", 0},
         {"debugvar", 333},
-        {"health", 100}
+        {"health", 100},
+        {"selsys", true}
     };
 
     private void Start() {

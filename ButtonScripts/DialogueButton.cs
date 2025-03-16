@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,5 +15,11 @@ public class DialogueButton : ButtonInternal
         base.ActedOn();
         dsbh.PurgeButtons();
         ds.ComplexSequence(_dialogues);
+    }
+
+    protected override void HandlePointerEnter()
+    {
+        base.HandlePointerEnter();
+        dsbh.ButtonMoveAudio();
     }
 }

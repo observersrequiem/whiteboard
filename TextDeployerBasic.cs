@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class TextDeployerBasic : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class TextDeployerBasic : MonoBehaviour
     [SerializeField] private TMP_Text textComponent;
     [SerializeField] private float charactersPerSecond = 30;
     [SerializeField] private Image indicator;
-    [SerializeField] private Image nametagImage;
     [SerializeField] private TMP_Text nameText;
     public bool isTyping;
     private Coroutine typingCoroutine;
@@ -50,16 +50,17 @@ public class TextDeployerBasic : MonoBehaviour
         indicator.enabled = false;
     }
     public void SetName(string name){
-        if (name == "empty")
+        if (name == "empty" || name == "")
         {
+            nametagbox.gameObject.SetActive(false);
             nameText.text = "";
-            nametagImage.enabled = false;
             Debug.Log("Nametag empty.");
         } else {
-            nametagImage.enabled = true;
+            nametagbox.gameObject.SetActive(true);
             nameText.text = name;
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(nametagbox);
+        if(nametagbox.gameObject.activeSelf){
+            LayoutRebuilder.ForceRebuildLayoutImmediate(nametagbox);}
     }
     // Typewriter effect :D
     private IEnumerator TypeText(string fullText) {

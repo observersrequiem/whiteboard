@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 // Locking in.
@@ -8,26 +7,18 @@ public class DialogueSystem : MonoBehaviour
      [SerializeField]
     Dictionary<string, int> animkeys = new Dictionary<string, int> (){
         { "none", 0 },
-        { "defo", 1 },
-        { "tagged", 2 }
+        { "defo", 1 }
     };
 
     public TextDeployerBasic tdb;
+    public bool dialogueSystemInUse;
     public Animator anim;
     public VarMan varman;
     public SFXDiaManager sfx;
     public DSButtonHandler dsbh;
     public List<Dialogue> dialogues = new();
     public bool CanNextFrame = true;
-    [SerializeField] Button move;
     [SerializeField] private int currentIndex;
-
-    public void PushDialogueBasic() 
-    {
-        // if the bug isnt fixed add a check here :p
-        anim.SetInteger("AnimID",animkeys[dialogues[currentIndex].AnimKey]);
-        tdb.StartTyping(dialogues[currentIndex].TextKey);tdb.SetName(dialogues[currentIndex].NameKey);
-    }
 
     public void PushDialogue(int curint)
     {
@@ -62,14 +53,8 @@ public class DialogueSystem : MonoBehaviour
         }
     } 
 
-    public void BasicSequence(List<Dialogue> chatter) {
-        dialogues.Clear();
-        currentIndex = 0;
-        dialogues = chatter;
-        PushDialogueBasic();
-    } 
-
     public void ComplexSequence(List<Dialogue> chatter) {
+        dialogueSystemInUse = true;
         dialogues.Clear();
         currentIndex = 0;
         dialogues = chatter;
@@ -80,13 +65,14 @@ public class DialogueSystem : MonoBehaviour
         Debug.Log("SEQUENCE OVER - SEQUENCE OVER - SEQUENCE OVER");
         dialogues.Clear();
         tdb.StartTyping("");
-        tdb.SetName("");
+        tdb.SetName("empty");
         anim.SetInteger("AnimID", 0); // add the UI disabling here (lol)
+        dialogueSystemInUse = false;
     }
 
     public void NextFrame() // U have to couple this with some inputmanager thingy
     {
-        if (CanNextFrame)
+        if (CanNextFrame && dialogueSystemInUse)
         {
             if (!tdb.isTyping){
             PushDialogue(currentIndex);

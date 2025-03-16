@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Animations;
 
 public class DSButtonHandler : MonoBehaviour
 {
@@ -12,6 +10,7 @@ public class DSButtonHandler : MonoBehaviour
     [SerializeField] RectTransform bgpanel;
     [SerializeField] Image bgpanelImage;
     [SerializeField,Tooltip("Assign this.")] DialogueSystem ds;
+    [SerializeField] TextDeployerBasic tdb;
     public bool DoAudio = true;
     public AudioSource a;
     public AudioClip a1;
@@ -20,7 +19,7 @@ public class DSButtonHandler : MonoBehaviour
     public AudioClip a4;
     public float ButtonsPerSecond;
     private Coroutine deploymentCoroutine;
-
+    public bool DSBHInUse;
     private List<BranchDialogue> currentArrayButtons;
     public GameObject selected;
     public int currentIndex;
@@ -58,6 +57,8 @@ public class DSButtonHandler : MonoBehaviour
     }
     private IEnumerator DeployButtonsCool(List<BranchDialogue> bd)
     {
+        yield return new WaitUntil(() => !tdb.isTyping);
+        DSBHInUse = true;
         bgpanelImage.enabled = true;
         currentArrayButtons = bd;
         float delay = 1f / ButtonsPerSecond;
@@ -89,6 +90,7 @@ public class DSButtonHandler : MonoBehaviour
         }
         canSelect = false;
         ds.CanNextFrame = true;
+        DSBHInUse = false;
     }
     private void ButtonSpawnAudio()
     {
@@ -159,6 +161,8 @@ public class DSButtonHandler : MonoBehaviour
         }
     }
     public void ActSelected(){
-        selected.GetComponent<ButtonInternal>().DSBHActSelected();
+        if (selected){
+            selected.GetComponent<ButtonInternal>().DSBHActSelected();
+        }
     }
 }

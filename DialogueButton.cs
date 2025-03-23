@@ -22,4 +22,10 @@ public class DialogueButton : ButtonInternal
         base.HandlePointerEnter();
         dsbh.ButtonMoveAudio();
     }
+
+    protected override void HandlePointerClick()
+    {
+        base.HandlePointerClick();
+        if(dsbh.canSelect){ActedOn();}
+    }
 }

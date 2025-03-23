@@ -3,7 +3,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class TextDeployerBasic : MonoBehaviour
 {
@@ -18,6 +17,7 @@ public class TextDeployerBasic : MonoBehaviour
     public bool isTyping;
     private Coroutine typingCoroutine;
     private string currentFullText;
+    public bool inUse;
     [SerializeField]private AudioSource player;
     [SerializeField]private AudioClip sfx1;
     [SerializeField]private AudioClip sfx2;
@@ -52,11 +52,11 @@ public class TextDeployerBasic : MonoBehaviour
     public void SetName(string name){
         if (name == "empty" || name == "")
         {
-            nametagbox.gameObject.SetActive(false);
+            nametagbox.gameObject.GetComponent<Image>().enabled = false;
             nameText.text = "";
             Debug.Log("Nametag empty.");
         } else {
-            nametagbox.gameObject.SetActive(true);
+            nametagbox.gameObject.GetComponent<Image>().enabled = true;
             nameText.text = name;
         }
         if(nametagbox.gameObject.activeSelf){
@@ -91,5 +91,13 @@ public class TextDeployerBasic : MonoBehaviour
     {
         player.clip = skip;
         player.Play();
+    }
+
+    public void DSSeqEnd(){
+        inUse = false;
+        indicator.enabled = false;
+    }
+    public void DSSeqStart(){
+        inUse = true;
     }
 }

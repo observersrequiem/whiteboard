@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 // Locking in.
 public class DialogueSystem : MonoBehaviour
@@ -11,6 +12,7 @@ public class DialogueSystem : MonoBehaviour
     };
 
     public TextDeployerBasic tdb;
+    public bool canIntSeq = true;
     public bool dialogueSystemInUse;
     public Animator anim;
     public VarMan varman;
@@ -18,10 +20,15 @@ public class DialogueSystem : MonoBehaviour
     public DSButtonHandler dsbh;
     public List<Dialogue> dialogues = new();
     public bool CanNextFrame = true;
+    Coroutine delayCoroutine;
     [SerializeField] private int currentIndex;
 
+    private void Awake() {
+        EndSequence();
+    }
     public void PushDialogue(int curint)
     {
+        if (!tdb.inUse){tdb.DSSeqStart();}
         Debug.Log("We are at "+currentIndex+" and we have a total of "+dialogues.Count);
         Dialogue d = dialogues.ElementAtOrDefault(curint);
         if (d != null)
@@ -39,8 +46,10 @@ public class DialogueSystem : MonoBehaviour
                     break;
                 case DialogueAction.DialogueActionType.DialogueBranch:
                     tdb.StartTyping(d.TextKey);tdb.SetName(d.NameKey);
-                    dsbh.PushButtons(d.Action.dbs);
-                    CanNextFrame = false;
+                    if (d.Action.dbs.Count == 0){
+                        Debug.Log("No buttons detected, fallback to ''None'' type.");
+                        
+                    } else {dsbh.PushButtons(d.Action.dbs);CanNextFrame = false;}
                     break;
             }
             if (d.Action.sfxkey != "") 
@@ -57,7 +66,7 @@ public class DialogueSystem : MonoBehaviour
         dialogueSystemInUse = true;
         dialogues.Clear();
         currentIndex = 0;
-        dialogues = chatter;
+        dialogues = new List<Dialogue>(chatter);
         PushDialogue(currentIndex);
     }
 
@@ -66,7 +75,9 @@ public class DialogueSystem : MonoBehaviour
         dialogues.Clear();
         tdb.StartTyping("");
         tdb.SetName("empty");
+        tdb.DSSeqEnd();
         anim.SetInteger("AnimID", 0); // add the UI disabling here (lol)
+        delayCoroutine = StartCoroutine(Delaycorout());
         dialogueSystemInUse = false;
     }
 
@@ -84,6 +95,17 @@ public class DialogueSystem : MonoBehaviour
     {
         CanNextFrame = true;
         ComplexSequence(d);
+    }
+
+
+    /* Use only if you have some form of interaction system that needs this delay. Add the bool check to your INPUT MANAGER */
+    IEnumerator Delaycorout()
+    {
+        Debug.Log("Delay applied to interaction.");
+        canIntSeq = false;
+        yield return new WaitForSeconds(0.15f);
+        delayCoroutine = null;
+        canIntSeq = true;
     }
 
 }

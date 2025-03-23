@@ -42,7 +42,7 @@ public class ButtonInternal : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     protected virtual void HandlePointerEnter() {}
     protected virtual void HandlePointerExit() {}
-    protected virtual void HandlePointerClick() {ActedOn();}
+    protected virtual void HandlePointerClick() {}
 
     public void DSBHActSelected(){
         ActedOn();

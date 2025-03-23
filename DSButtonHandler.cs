@@ -115,30 +115,35 @@ public class DSButtonHandler : MonoBehaviour
     // There's probably a better way to do this
     // Oh well :^)
     public void IndexDown(){
-        if(buttons != null){
-        ButtonMoveAudio();
-        currentIndex++;
-        if(currentIndex > buttons.Count - 1){
+        if (canSelect){
+            if(buttons != null){
+            ButtonMoveAudio();
+            currentIndex++;
+            if(currentIndex > buttons.Count - 1){
             currentIndex = 0;
-            selected.GetComponent<ButtonInternal>().DSBHUnselected();
-            selected = buttons[currentIndex];
-            selected.GetComponent<ButtonInternal>().DSBHSelected();}
-        else {selected.GetComponent<ButtonInternal>().DSBHUnselected();
-            selected = buttons[currentIndex];
-            selected.GetComponent<ButtonInternal>().DSBHSelected();}}
+                selected.GetComponent<ButtonInternal>().DSBHUnselected();
+                selected = buttons[currentIndex];
+                selected.GetComponent<ButtonInternal>().DSBHSelected();}
+            else {selected.GetComponent<ButtonInternal>().DSBHUnselected();
+                selected = buttons[currentIndex];
+                selected.GetComponent<ButtonInternal>().DSBHSelected();}}
+        }
+
     }
     public void IndexUp(){
-        if(buttons != null){
-        ButtonMoveAudio();
-        currentIndex--;
-        if(currentIndex < 0){
-            selected.GetComponent<ButtonInternal>().DSBHUnselected();
-            currentIndex = buttons.Count - 1;
-            selected = buttons[currentIndex];
-            selected.GetComponent<ButtonInternal>().DSBHSelected();}
-        else {selected.GetComponent<ButtonInternal>().DSBHUnselected();
-            selected = buttons[currentIndex];
-            selected.GetComponent<ButtonInternal>().DSBHSelected();}}
+        if (canSelect){
+                if(buttons != null){
+            ButtonMoveAudio();
+            currentIndex--;
+            if(currentIndex < 0){
+                selected.GetComponent<ButtonInternal>().DSBHUnselected();
+                currentIndex = buttons.Count - 1;
+                selected = buttons[currentIndex];
+                selected.GetComponent<ButtonInternal>().DSBHSelected();}
+            else {selected.GetComponent<ButtonInternal>().DSBHUnselected();
+                selected = buttons[currentIndex];
+                selected.GetComponent<ButtonInternal>().DSBHSelected();}}
+        }
     }
     public void SelectDown(){
         if (canSelect){

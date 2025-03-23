@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    DialogueSystem ds;
+    protected DialogueSystem ds;
     private void Start() {
         ds = GameObject.FindGameObjectWithTag("VNUI").GetComponent<DialogueSystem>();
     }
